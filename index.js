@@ -5,27 +5,20 @@ var util = require('util');
 var colors =require('colors');
 var async = require('async');
 var parser = require('./parser');
-var mysql_proxy = require('./mysql_proxy');//.loadList();
+var mysql_proxy = require('./mysql_proxy');
 //console.log(mysql_proxy);
 mysql_proxy.loadList(
     function (res) {
-        console.log(res.data);
+        console.log('ip in base: '+res.data.length);
     }
 );
 parser.parseList(
     function(res){
-        console.log(res.length);
+        console.log('ip count: '+res.length);
         var count = 0;
-        //async.forEach(res, function(element, i) {
-          //  mysql_proxy.updateList(element, function(res){
-             //   console.log(res);
-            //});
-            //console.log(i+': '+JSON.stringify(element));
-        //}, this);
         async.whilst(
             function(){return count < res.length},
             function(callback){
-                //console.log(res[count]);
                 mysql_proxy.updateList(res[count], function(result){
                     count++;
                     callback(null, count);
@@ -56,7 +49,7 @@ parser.parseList(
         secc = secc+100;
     }
     setInterval(smin,1777);*/
-    
+
 var server = http.createServer(function(request, response) {
     console.log(request.url);
     var ph = url.parse(request.url);

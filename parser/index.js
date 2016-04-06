@@ -39,7 +39,7 @@ var parseSite = function(url, numPage, callback){
             $(".proxy").each(function(currentLink, index, next){
                 currentLink.text(function(text){
                     var tmp = parse_ip_address(text);
-                    if (tmp){ 
+                    if (tmp){
                         arr[index] = {ip:tmp[1]+'.'+tmp[2]+'.'+tmp[3]+'.'+tmp[4], port:tmp[6]};
                     }
                     next();
@@ -52,7 +52,7 @@ var parseSite = function(url, numPage, callback){
 }
 var exp ={
     parseList: function(res){
-        async.times(1, 
+        async.times(10,
             function (n, next){
                 parseSite('http://proxy-list.org/russian/search.php?search=transparent&country=any&type=transparent&port=any&ssl=any&p=', n, function(err, page){
                     next(err, page);
@@ -66,16 +66,7 @@ var exp ={
                             arr.push(item[key][subkey]);
                         }
                     }
-                })                
-                /*var i = 1;
-                async.each(arr, 
-                    function(val, callback){
-                        console.log(i+' : '+JSON.stringify(val));
-                        i++;
-                        callback();            
-                    }, function(err){
-                    console.log('end');
-                })*/
+                })
                 res(arr);
             }
         )
@@ -88,7 +79,7 @@ module.exports = exp;
 
 
 /*var proxy = {
-    proxyList : {}, 
+    proxyList : {},
     loadUrl : function(url, res){
         async.series({
             load: function(callback){
@@ -126,10 +117,10 @@ module.exports = exp;
                 port : $(elem).children('.td').eq(5).text()
             })
         });
-        //console.log(prox);       
+        //console.log(prox);
         return prox;
     }
-} 
+}
 module.exports = proxy;*/
 //proxy.pager('http://www.freeproxy-list.ru/proxy-list/',5);
 
