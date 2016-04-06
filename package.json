@@ -1,0 +1,33 @@
+{
+  "name": "phantomio",
+  "version": "0.0.1",
+  "description": "This simple library provides the ability to use socket.io-client library inside phantomjs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/*.git"
+  },
+  "keywords": [
+    "proxy"
+  ],
+  "author": "jestasg@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/"
+  },
+  "homepage": "https://github.com/",
+  "dependencies": {
+    "async": "^2.0.0-rc.2",
+    "charset": "^1.0.0",
+    "colors": "^1.1.2",
+    "config": "^1.19.0",
+    "iconv": "^2.1.11",
+    "mysql": "^2.10.2",
+    "phantom-jquery": "^1.2.1",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {}
+}
