@@ -71,7 +71,7 @@ var exp ={
             }
         )*/
         var count = 0;
-        var site_url = '';
+        var site_url = 'http://proxy-list.org/russian/search.php?search=transparent&country=any&type=transparent&port=any&ssl=any&p=';
         async.whilst(
           function(){return count < 10},
           function(callback){
