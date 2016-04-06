@@ -52,7 +52,7 @@ var parseSite = function(url, numPage, callback){
 }
 var exp ={
     parseList: function(res){
-        async.times(10,
+        /*async.times(10,
             function (n, next){
                 parseSite('http://proxy-list.org/russian/search.php?search=transparent&country=any&type=transparent&port=any&ssl=any&p=', n, function(err, page){
                     next(err, page);
@@ -69,6 +69,19 @@ var exp ={
                 })
                 res(arr);
             }
+        )*/
+        var count = 0;
+        var site_url = '';
+        async.whilst(
+          function(){return count < 10},
+          function(callback){
+              parseSite(site_url, count, function(err, page){
+                 callback(err, page);
+              })
+          },
+          function(err,results){
+            console.log(results);
+          }
         )
     }
 }
