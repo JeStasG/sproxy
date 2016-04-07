@@ -70,7 +70,7 @@ var exp ={
                         }
                     }
                 })
-                var i = 1;
+                /*var i = 1;
                 async.each(arr,
                     function(val, callback){
                         console.log(i+' : '+JSON.stringify(val));
@@ -78,7 +78,7 @@ var exp ={
                         callback();
                     }, function(err){
                     console.log('end');
-                })
+                })*/
                 res(arr);
             }
         )

@@ -35,14 +35,15 @@ var exp = {
                 if (results.fix == 0){
                     connection.query('INSERT INTO proxy_list (ip_address, port) VALUES (?,?)', [ipObj.ip, ipObj.port],
                             function(err, result){
-                                console.log('inserted: '+result.insertId);
+                                //count++;
+                                //console.log('inserted: '+result.insertId);
                                 res(result);
                             })
                         }
                         else {
                             res(results);
                         }
-                res(results);
+                //res(results);
             })
     },
     updateProxy : function(ipObj, res){

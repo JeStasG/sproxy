@@ -48,16 +48,18 @@ parser.parseList(
     function(res){
         console.log('ip count: '+res.length);
         var count = 0;
+        var count_inserted =0;
         async.whilst(
             function(){return count < res.length},
             function(callback){
                 mysql_proxy.updateList(res[count], function(result){
                     count++;
+                    if (result.insertId) count_inserted++;
                     callback(null, count);
                 })
             },
             function(err, results){
-                //console.log(results);
+                console.log(count_inserted.yellow);
             }
         )
     }
