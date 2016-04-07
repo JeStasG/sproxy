@@ -7,43 +7,43 @@ var async = require('async');
 var parser = require('./parser');
 var mysql_proxy = require('./mysql_proxy');
 //console.log(mysql_proxy);
-mysql_proxy.loadList(
-    function (res) {
-        console.log(colors.blue('ip in base: '+res.data.length));
-        var index = 0;
-        var active_proxy = 0;
-        async.whilst(
-          function(){
-            if (index == res.data.length) console.log('end ip`s'.red);
-            return index < res.data.length
-          },
-          function(callback){
-            console.log(colors.green(index+' > ')+res.data[index].ip_address+':'+res.data[index].port);
-            parser.checkProxy(res.data[index].ip_address,res.data[index].port,{url:'http://ya.ru'},
-            function(host,port,status,check_result){
-              if (status) {
-                mysql_proxy.updateProxy({ip:host,port:port,active:1},function(res){
-                  console.log(colors.yellow('host: '+host+' port: '+port+' status :'+status+' result: '+check_result));
-                  callback(null, active_proxy);
-                  active_proxy++;
-                })
-              }
-              else {
-                mysql_proxy.updateProxy({ip:host,port:port,active:0},function(res){
-                  console.log(colors.red('host: '+host+' port: '+port+' status :'+status+' result: '+check_result));
-                  callback(null, active_proxy);
-                })
-              }
-              index++;
-              //if (status) {active_proxy++}
-            });
-          },
-          function(err, results){
-              console.log(colors.blue('active proxy: '+results))
-          }
-        )
-    }
-);
+var load_and_check = function(){mysql_proxy.loadList(
+                              function (res) {
+                                  console.log(colors.blue('ip in base: '+res.data.length));
+                                  var index = 0;
+                                  var active_proxy = 0;
+                                  async.whilst(
+                                    function(){
+                                      if (index == res.data.length) console.log('end ip`s'.red);
+                                      return index < res.data.length
+                                    },
+                                    function(callback){
+                                      console.log(colors.cyan(index+' > '+res.data[index].ip_address+':'+res.data[index].port));
+                                      parser.checkProxy(res.data[index].ip_address,res.data[index].port,{url:'http://ya.ru'},
+                                      function(host,port,status,check_result){
+                                        if (status) {
+                                          mysql_proxy.updateProxy({ip:host,port:port,active:1},function(res){
+                                            console.log(colors.yellow('host: '+host+' port: '+port+' status :'+status+' result: '+check_result));
+                                            callback(null, active_proxy);
+                                            active_proxy++;
+                                          })
+                                        }
+                                        else {
+                                          mysql_proxy.updateProxy({ip:host,port:port,active:0},function(res){
+                                            console.log(colors.red('host: '+host+' port: '+port+' status :'+status+' result: '+check_result));
+                                            callback(null, active_proxy);
+                                          })
+                                        }
+                                        index++;
+                                        //if (status) {active_proxy++}
+                                      });
+                                    },
+                                    function(err, results){
+                                        console.log(colors.blue('active proxy: '+results))
+                                    }
+                                  )
+                              }
+                          )};
 parser.parseList(
     function(res){
         console.log('ip count: '+res.length);
@@ -59,7 +59,8 @@ parser.parseList(
                 })
             },
             function(err, results){
-                console.log(count_inserted.yellow);
+                console.log(colors.magenta('ip inserted: '+count_inserted));
+                load_and_check();
             }
         )
     }
