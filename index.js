@@ -22,14 +22,21 @@ var load_and_check = function(){mysql_proxy.loadList(
                                       parser.checkProxy(res.data[index].ip_address,res.data[index].port,{url:'http://ya.ru'},
                                       function(host,port,status,check_result){
                                         if (status) {
-                                          mysql_proxy.updateProxy({ip:host,port:port,active:1},function(res){
+                                          var count_check = 0;
+                                          if(!res.data[index].count_check++){
+                                            count_check++;
+                                          }
+                                          else {
+                                            count_check = res.data[index].count_check++;
+                                          }
+                                          mysql_proxy.updateProxy({ip:host,port:port,active:1,count_check:count_check},function(res){
                                             console.log(colors.yellow('host: '+host+' port: '+port+' status:'+status+' result: '+check_result));
                                             callback(null, active_proxy);
                                             active_proxy++;
                                           })
                                         }
                                         else {
-                                          mysql_proxy.updateProxy({ip:host,port:port,active:0},function(res){
+                                          mysql_proxy.updateProxy({ip:host,port:port,active:0,count_check:count_check},function(res){
                                             console.log(colors.red('host: '+host+' port: '+port+' status :'+status+' result: '+check_result));
                                             callback(null, active_proxy);
                                           })

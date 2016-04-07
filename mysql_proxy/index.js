@@ -50,7 +50,7 @@ var exp = {
     updateProxy : function(ipObj, res){
       async.series({
         upd: function(callback){
-          connection.query('UPDATE proxy_list SET active=?, last_check=? WHERE ip_address=? AND port=?', [ipObj.active, datetime.create().format('m/d/y H:M:S'), ipObj.ip, ipObj.port],
+          connection.query('UPDATE proxy_list SET active=?, last_check=?, count_check=? WHERE ip_address=? AND port=?', [ipObj.active, datetime.create().format('m/d/y H:M:S'), ipObj.count_check, ipObj.ip, ipObj.port],
             function(err, result){
               callback(null);
             })
