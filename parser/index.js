@@ -2,6 +2,7 @@ var toEnc = 'utf-8';
 var charset = require('charset');
 var async = require('async');
 var phantom = require("phantom-jquery");
+var request = require('request');
 
 var arr = [];
 var ip_regex = /(\d+)\.(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?(?::(\d+))?/;
@@ -35,7 +36,8 @@ var parse_ip_address = function(ip_string){
 var parseSite = function(url, numPage, callback){
     var arr = {};
     numPage++;
-    phantom.open(url+numPage, function(err, $, page, ph){
+    var options = { 'web-security': 'no' };
+    phantom.open(url+numPage, {parameters: options}, function(err, $, page, ph){
             $(".proxy").each(function(currentLink, index, next){
                 currentLink.text(function(text){
                     var tmp = parse_ip_address(text);
@@ -45,7 +47,7 @@ var parseSite = function(url, numPage, callback){
                     next();
                 })
             },function(){
-                ph.exit()
+                ph.exit();
                 callback(null, {[numPage]: arr});
             });
         });
@@ -53,8 +55,9 @@ var parseSite = function(url, numPage, callback){
 var exp ={
     parseList: function(res){
         async.times(10,
+
             function (n, next){
-                parseSite('http://proxy-list.org/russian/search.php?search=transparent&country=any&type=transparent&port=any&ssl=any&p=', n, function(err, page){
+                parseSite('http://proxy-list.org/russian/index.php?p=', n, function(err, page){
                     next(err, page);
                 })
             },
@@ -67,10 +70,37 @@ var exp ={
                         }
                     }
                 })
+                var i = 1;
+                async.each(arr,
+                    function(val, callback){
+                        console.log(i+' : '+JSON.stringify(val));
+                        i++;
+                        callback();
+                    }, function(err){
+                    console.log('end');
+                })
                 res(arr);
             }
         )
-    }
+    },
+    checkProxy: function(host, port, options, callback) {
+                  	var proxyRequest = request.defaults({
+                  		proxy: 'http://' + host + ':' + port,
+                      timeout:3000
+                  	});
+                  	proxyRequest(options.url, function(err, res) {
+                    		var testText = 'content="Yelp"';
+                    		if( err ) {
+                    			callback(host, port, false, -1, err);
+                    		} else if( res.statusCode != 200 ) {
+                    			callback(host, port, false, res.statusCode, err);
+                    		} else if( !res.body || (options.regex && !options.regex.exec(res.body)) ) {
+                    			callback(host, port, false, res.statusCode, "Body doesn't match the regex " + options.regex + ".");
+                    		} else {
+                    			callback(host, port, true, res.statusCode);
+                    		}
+                  	});
+              }
 }
 
 module.exports = exp;

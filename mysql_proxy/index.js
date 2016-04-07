@@ -44,6 +44,18 @@ var exp = {
                         }
                 res(results);
             })
+    },
+    updateProxy : function(ipObj, res){
+      async.series({
+        upd: function(callback){
+          connection.query('UPDATE proxy_list SET active=? WHERE ip_address=? AND port=?', [ipObj.active, ipObj.ip, ipObj.port],
+            function(err, result){
+              callback(null);
+            })
+        }
+      },function(err, results){
+         res(results);
+      })
     }
 }
 module.exports = exp;
