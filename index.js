@@ -40,11 +40,12 @@ var load_and_check = function(){mysql_proxy.loadList(
                                     },
                                     function(err, results){
                                         console.log(colors.blue('active proxy: '+results))
+                                        parse_list();
                                     }
                                   )
                               }
                           )};
-parser.parseList(
+var parse_list = function(){parser.parseList(
     function(res){
         console.log('ip count: '+res.length);
         var count = 0;
@@ -64,9 +65,9 @@ parser.parseList(
             }
         )
     }
-);
+)};
 
-
+parse_list();
 
 
     /*var secc = 1000;
