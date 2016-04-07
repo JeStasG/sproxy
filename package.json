@@ -26,6 +26,7 @@
     "config": "^1.19.0",
     "iconv": "^2.1.11",
     "mysql": "^2.10.2",
+    "node-datetime": "^0.1.5",
     "phantom-jquery": "^1.2.1",
     "url": "^0.11.0"
   },

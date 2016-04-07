@@ -2,6 +2,7 @@ var mysql = require('mysql');
 var config = require('config');
 var async = require('async');
 var mysql_config = config.get('mysql');
+var datetime = require('node-datetime');
 var connection = mysql.createConnection(mysql_config);
 connection.connect();
 connection.on('error', function(err){
@@ -49,7 +50,7 @@ var exp = {
     updateProxy : function(ipObj, res){
       async.series({
         upd: function(callback){
-          connection.query('UPDATE proxy_list SET active=? WHERE ip_address=? AND port=?', [ipObj.active, ipObj.ip, ipObj.port],
+          connection.query('UPDATE proxy_list SET active=?, last_check=? WHERE ip_address=? AND port=?', [ipObj.active, datetime.create().format('m/d/y H:M:S'), ipObj.ip, ipObj.port],
             function(err, result){
               callback(null);
             })
