@@ -1,6 +1,6 @@
 {"mysql":{
   "host"     : "localhost",
   "user"     : "proxy_user",
-  "password" : "100181",
+  "password" : "proxy",
   "database" : "proxy"
 }}
